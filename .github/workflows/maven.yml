@@ -25,4 +25,4 @@ jobs:
     - name: Build with Maven
       env:
         TB_SECRET_TOKEN: ${{ secrets.SHLIBOT_SECRET_TOKEN }}
-      run: mvn -Dtoken=$TB_SECRET_TOKEN -B package --file pom.xml
+      run: mvn -DTB_SECRET_TOKEN=$TB_SECRET_TOKEN -B package --file pom.xml
