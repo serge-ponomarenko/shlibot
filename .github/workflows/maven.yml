@@ -23,6 +23,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      env:
-        SECRET_TOKEN: ${{ secrets.SHLIBOT_SECRET_TOKEN }}
-      run: mvn -DTB_SECRET_TOKEN=$SECRET_TOKEN -B package --file pom.xml
+      run: mvn -DTB_SECRET_TOKEN=${{ secrets.SHLIBOT_SECRET_TOKEN }} -B package --file pom.xml
