@@ -9,3 +9,7 @@
 ## 0.2.0-SNAPSHOT
 
 * implemented Command pattern for handling Telegram Bot commands
+
+## 0.3.0-SNAPSHOT
+
+* added a repository layer
