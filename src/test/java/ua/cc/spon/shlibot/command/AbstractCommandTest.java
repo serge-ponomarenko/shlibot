@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.cc.spon.shlibot.bot.ShoppingListTelegramBot;
 import ua.cc.spon.shlibot.service.SendBotMessageService;
 import ua.cc.spon.shlibot.service.SendBotMessageServiceImpl;
+import ua.cc.spon.shlibot.service.TelegramUserService;
+import ua.cc.spon.shlibot.service.TelegramUserServiceImpl;
 
 /**
  * Abstract class for testing {@link Command}s.
@@ -17,6 +19,7 @@ abstract class AbstractCommandTest {
 
     protected ShoppingListTelegramBot shoppingListTelegramBot = Mockito.mock(ShoppingListTelegramBot.class);
     protected SendBotMessageService sendBotMessageService = new SendBotMessageServiceImpl(shoppingListTelegramBot);
+    protected TelegramUserService telegramUserService = Mockito.mock(TelegramUserService.class);
 
     abstract String getCommandName();
 

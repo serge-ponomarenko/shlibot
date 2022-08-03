@@ -1,13 +1,13 @@
 package ua.cc.spon.shlibot.bot;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.cc.spon.shlibot.command.CommandContainer;
 import ua.cc.spon.shlibot.service.SendBotMessageServiceImpl;
+import ua.cc.spon.shlibot.service.TelegramUserService;
 
 import static ua.cc.spon.shlibot.command.CommandName.NO;
 
@@ -24,8 +24,9 @@ public class ShoppingListTelegramBot extends TelegramLongPollingBot {
 
     private final CommandContainer commandContainer;
 
-    public ShoppingListTelegramBot() {
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this));
+    @Autowired
+    public ShoppingListTelegramBot(TelegramUserService telegramUserService) {
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), telegramUserService);
     }
 
     @Override
