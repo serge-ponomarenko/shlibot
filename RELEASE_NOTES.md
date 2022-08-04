@@ -13,3 +13,9 @@
 ## 0.3.0-SNAPSHOT
 
 * added a repository layer
+
+## 0.4.0-SNAPSHOT
+
+* added rest of entities
+* realized basic functionality (added products to list)
+* users are saving to database

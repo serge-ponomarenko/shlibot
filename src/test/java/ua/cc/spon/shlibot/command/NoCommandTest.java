@@ -3,7 +3,7 @@ package ua.cc.spon.shlibot.command;
 import org.junit.jupiter.api.DisplayName;
 
 import static ua.cc.spon.shlibot.command.CommandName.NO;
-import static ua.cc.spon.shlibot.command.NoCommand.NO_MESSAGE;
+import static ua.cc.spon.shlibot.command.NoCommand.NO_USER;
 
 @DisplayName("Unit-level testing for NoCommand")
 class NoCommandTest extends AbstractCommandTest{
@@ -14,11 +14,12 @@ class NoCommandTest extends AbstractCommandTest{
 
     @Override
     String getCommandMessage() {
-        return NO_MESSAGE;
+        return NO_USER;
     }
 
     @Override
     Command getCommand() {
-        return new NoCommand(sendBotMessageService);
+        return new NoCommand(sendBotMessageService,
+                telegramUserService, userListService, productService);
     }
 }

@@ -13,7 +13,7 @@ public class StopCommand implements Command {
     private final TelegramUserService telegramUserService;
 
     //todo: realize internationalization
-    public final static String STOP_MESSAGE = "Я не буду больше тебе присылать никаких уведомлений. " +
+    public static final String STOP_MESSAGE = "Я не буду больше тебе присылать никаких уведомлений. " +
             "Но если ты вдруг решишь вернуться, то все твои списки останутся не тронутыми. \uD83D\uDE1F";
 
     public StopCommand(SendBotMessageService sendBotMessageService, TelegramUserService telegramUserService) {

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.cc.spon.shlibot.command.CommandContainer;
+import ua.cc.spon.shlibot.service.ProductService;
 import ua.cc.spon.shlibot.service.SendBotMessageServiceImpl;
 import ua.cc.spon.shlibot.service.TelegramUserService;
+import ua.cc.spon.shlibot.service.UserListService;
 
 import static ua.cc.spon.shlibot.command.CommandName.NO;
 
@@ -25,8 +27,12 @@ public class ShoppingListTelegramBot extends TelegramLongPollingBot {
     private final CommandContainer commandContainer;
 
     @Autowired
-    public ShoppingListTelegramBot(TelegramUserService telegramUserService) {
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), telegramUserService);
+    public ShoppingListTelegramBot(TelegramUserService telegramUserService,
+                                   UserListService userListService,
+                                   ProductService productService) {
+        this.commandContainer =
+                new CommandContainer(new SendBotMessageServiceImpl(this),
+                        telegramUserService, userListService, productService);
     }
 
     @Override
