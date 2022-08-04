@@ -13,7 +13,7 @@ public class HelpCommand implements Command {
     private final SendBotMessageService sendBotMessageService;
 
     //todo: realize internationalization
-    public final static String HELP_MESSAGE = String.format("✨<b>Дотупные команды</b>✨\n\n"
+    public static final String HELP_MESSAGE = String.format("✨<b>Дотупные команды</b>✨\n\n"
                     + "<b>Начать\\закончить работу с ботом</b>\n"
                     + "%s - начать работу со мной\n"
                     + "%s - приостановить работу со мной\n\n"

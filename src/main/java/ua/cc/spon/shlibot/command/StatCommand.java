@@ -10,11 +10,11 @@ import ua.cc.spon.shlibot.service.TelegramUserService;
  */
 public class StatCommand implements Command {
 
+    //todo: realize internationalization
+    public static final String STAT_MESSAGE = "Сейчас бот испльзуют %s человек.";
+
     private final SendBotMessageService sendBotMessageService;
     private final TelegramUserService telegramUserService;
-
-    //todo: realize internationalization
-    public final static String STAT_MESSAGE = "Сейчас бот испльзуют %s человек.";
 
     public StatCommand(SendBotMessageService sendBotMessageService, TelegramUserService telegramUserService) {
         this.sendBotMessageService = sendBotMessageService;
