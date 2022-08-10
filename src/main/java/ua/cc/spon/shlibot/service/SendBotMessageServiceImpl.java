@@ -3,6 +3,7 @@ package ua.cc.spon.shlibot.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.cc.spon.shlibot.bot.ShoppingListTelegramBot;
 
@@ -21,10 +22,17 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
 
     @Override
     public void sendMessage(String chatId, String message) {
+        sendMessage(chatId, message, null);
+    }
+
+    @Override
+    public void sendMessage(String chatId, String message, ReplyKeyboard keyboard) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableHtml(true);
         sendMessage.setText(message);
+
+        if (keyboard != null) sendMessage.setReplyMarkup(keyboard);
 
         try {
             shoppingListBot.execute(sendMessage);
@@ -32,6 +40,5 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             //todo: add logging
             e.printStackTrace();
         }
-
     }
 }

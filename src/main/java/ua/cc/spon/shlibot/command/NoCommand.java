@@ -2,63 +2,54 @@ package ua.cc.spon.shlibot.command;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.cc.spon.shlibot.repository.entity.Product;
-import ua.cc.spon.shlibot.repository.entity.TelegramUser;
 import ua.cc.spon.shlibot.repository.entity.UserList;
+import ua.cc.spon.shlibot.service.MessageService;
 import ua.cc.spon.shlibot.service.ProductService;
-import ua.cc.spon.shlibot.service.SendBotMessageService;
 import ua.cc.spon.shlibot.service.TelegramUserService;
-import ua.cc.spon.shlibot.service.UserListService;
 
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * No {@link Command}.
  */
 public class NoCommand implements Command {
 
-    private final SendBotMessageService sendBotMessageService;
+    private final MessageService messageService;
     private final TelegramUserService telegramUserService;
-    private final UserListService userListService;
     private final ProductService productService;
 
-    //todo: realize internationalization
-    public static final String NO_MESSAGE = "<b>%s</b> добавлено в основной список.";
-    public static final String NO_USER = "Вы еще не зарегестрированы. Вам следует начать с комманды /start.";
-
-    public NoCommand(SendBotMessageService sendBotMessageService,
+    public NoCommand(MessageService messageService,
                      TelegramUserService telegramUserService,
-                     UserListService userListService,
                      ProductService productService) {
-        this.sendBotMessageService = sendBotMessageService;
+        this.messageService = messageService;
         this.telegramUserService = telegramUserService;
-        this.userListService = userListService;
         this.productService = productService;
     }
 
     @Override
     public void execute(Update update) {
 
-        String chatId = update.getMessage().getChatId().toString();
-        String message = update.getMessage().getText();
+        String chatId = Optional.ofNullable(update.getMessage())
+                .orElseGet(() -> update.getCallbackQuery().getMessage())
+                .getChatId().toString();
+        String message = Optional.ofNullable(update.getMessage().getText())
+                .orElseGet(() -> update.getCallbackQuery().getData());
 
         telegramUserService.findByChatIdAndActiveIsTrue(chatId).ifPresentOrElse(
                 user -> {
                     UserList mainList = user.getMainList();
 
                     Product product = new Product();
-                    product.setId(0);
                     product.setName(message);
                     product.setCreationDate(new Date());
                     product.setList(mainList);
 
                     productService.save(product);
 
-                    sendBotMessageService.sendMessage(chatId, String.format(NO_MESSAGE, message));
+                    messageService.sendMessageProductAdded(chatId, product, mainList);
                 },
-                () -> {
-                    sendBotMessageService.sendMessage(chatId, NO_USER);
-                }
-            );
+                () -> messageService.sendMessageUserNotRegistered(chatId)
+        );
     }
 }

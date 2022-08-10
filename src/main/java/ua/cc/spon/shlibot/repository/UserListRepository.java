@@ -12,7 +12,6 @@ import java.util.Set;
  */
 @Repository
 public interface UserListRepository extends JpaRepository<UserList, Integer> {
-
     Set<UserList> findByOwner(TelegramUser user);
 
 }

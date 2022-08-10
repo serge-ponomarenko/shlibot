@@ -4,19 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.cc.spon.shlibot.command.CommandContainer;
-import ua.cc.spon.shlibot.service.ProductService;
-import ua.cc.spon.shlibot.service.SendBotMessageServiceImpl;
-import ua.cc.spon.shlibot.service.TelegramUserService;
-import ua.cc.spon.shlibot.service.UserListService;
-
-import static ua.cc.spon.shlibot.command.CommandName.NO;
+import ua.cc.spon.shlibot.service.*;
 
 @Component
 public class ShoppingListTelegramBot extends TelegramLongPollingBot {
-
-    public static String COMMAND_PREFIX = "/";
 
     @Value("${bot.username}")
     private String username;
@@ -30,23 +26,38 @@ public class ShoppingListTelegramBot extends TelegramLongPollingBot {
     public ShoppingListTelegramBot(TelegramUserService telegramUserService,
                                    UserListService userListService,
                                    ProductService productService) {
+
+        KeyboardMarkupManager keyboardMarkupManager = new KeyboardMarkupManager();
+        SendBotMessageService sendBotMessageService = new SendBotMessageServiceImpl(this);
+        MessageService messageService = new MessageService(keyboardMarkupManager, sendBotMessageService);
         this.commandContainer =
-                new CommandContainer(new SendBotMessageServiceImpl(this),
-                        telegramUserService, userListService, productService);
+                new CommandContainer(sendBotMessageService,
+                        telegramUserService, userListService,
+                        productService, messageService);
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String message = update.getMessage().getText().trim();
+            String commandIdentifier = update.getMessage().getText().trim();
+            commandContainer.retrieveCommand(commandIdentifier).execute(update);
 
-            if (message.startsWith(COMMAND_PREFIX)) {
-                String commandIdentifier = message.split(" ")[0].toLowerCase();
+        }
+        if (update.hasCallbackQuery()) {
+            String callBackQuery = update.getCallbackQuery().getData();
+            System.out.println(callBackQuery);
+            commandContainer.retrieveCommand(callBackQuery).execute(update);
 
-                commandContainer.retrieveCommand(commandIdentifier).execute(update);
-            } else {
-                commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
-            }
+            AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(update.getCallbackQuery().getId());
+            EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
+            editMessageReplyMarkup.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+            editMessageReplyMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+            editMessageReplyMarkup.setReplyMarkup(null);
+            try {
+                execute(answerCallbackQuery);
+                execute(editMessageReplyMarkup);
+            } catch (TelegramApiException e) {}  // TODO: 09.08.2022  
+
 
         }
     }

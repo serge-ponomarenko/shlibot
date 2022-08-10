@@ -1,9 +1,6 @@
 package ua.cc.spon.shlibot.repository.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Target;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,9 +8,11 @@ import java.util.Set;
 /**
  * User's List of goods entity.
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode(of = {"id", "name", "shareToken"})
 @Entity
 @Table(name = "lists")
 public class UserList {
@@ -33,18 +32,13 @@ public class UserList {
     private boolean deleted;
 
     @OneToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private TelegramUser owner;
 
     @ManyToMany
-    @JoinTable(name="users_lists"
-            , joinColumns={
-            @JoinColumn(name="list_id")
-    }
-            , inverseJoinColumns={
-            @JoinColumn(name="user_id")
-    }
-    )
+    @JoinTable(name = "users_lists",
+            joinColumns = {@JoinColumn(name = "list_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<TelegramUser> users;
 
 }

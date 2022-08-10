@@ -1,19 +1,20 @@
 package ua.cc.spon.shlibot.repository.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * Product entity.
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "products")
 public class Product {
@@ -38,8 +39,8 @@ public class Product {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @OneToOne
-    @JoinColumn(name="list_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "list_id")
     private UserList list;
 
 }

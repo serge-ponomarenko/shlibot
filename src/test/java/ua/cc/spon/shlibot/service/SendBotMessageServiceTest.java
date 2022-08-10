@@ -8,8 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.cc.spon.shlibot.bot.ShoppingListTelegramBot;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DisplayName("Unit-level testing for SendBotMessageService")
 class SendBotMessageServiceTest {
 

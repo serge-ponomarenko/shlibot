@@ -16,8 +16,8 @@ public interface TelegramUserRepository extends JpaRepository<TelegramUser, Inte
     List<TelegramUser> findAllByActiveTrue();
 
     Optional<TelegramUser> findByChatId(String chatId);
-    Optional<TelegramUser> findByChatIdAndActiveIsTrue(String chatId);
 
+    Optional<TelegramUser> findByChatIdAndActiveIsTrue(String chatId);
 
 
 }

@@ -1,8 +1,9 @@
 package ua.cc.spon.shlibot.repository.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -11,9 +12,10 @@ import java.util.Set;
 /**
  * Telegram User entity.
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "tg_user")
 public class TelegramUser {
@@ -33,9 +35,9 @@ public class TelegramUser {
     private String name;
 
     @OneToOne
-    @JoinColumn(name="mainlist_id")
+    @JoinColumn(name = "mainlist_id")
     private UserList mainList;
 
-    @ManyToMany(mappedBy="users")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<UserList> userLists = new HashSet<>();
 }

@@ -1,7 +1,7 @@
 package ua.cc.spon.shlibot.command;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.cc.spon.shlibot.service.SendBotMessageService;
+import ua.cc.spon.shlibot.service.MessageService;
 import ua.cc.spon.shlibot.service.TelegramUserService;
 
 /**
@@ -9,22 +9,20 @@ import ua.cc.spon.shlibot.service.TelegramUserService;
  */
 public class StopCommand implements Command {
 
-    private final SendBotMessageService sendBotMessageService;
+    private final MessageService messageService;
     private final TelegramUserService telegramUserService;
 
-    //todo: realize internationalization
-    public static final String STOP_MESSAGE = "Я не буду больше тебе присылать никаких уведомлений. " +
-            "Но если ты вдруг решишь вернуться, то все твои списки останутся не тронутыми. \uD83D\uDE1F";
-
-    public StopCommand(SendBotMessageService sendBotMessageService, TelegramUserService telegramUserService) {
-        this.sendBotMessageService = sendBotMessageService;
+    public StopCommand(MessageService messageService, TelegramUserService telegramUserService) {
+        this.messageService = messageService;
         this.telegramUserService = telegramUserService;
     }
 
     @Override
     public void execute(Update update) {
         String chatId = update.getMessage().getChatId().toString();
-        sendBotMessageService.sendMessage(chatId, STOP_MESSAGE);
+
+        messageService.sendMessageUserStop(chatId);
+
         telegramUserService.findByChatId(chatId)
                 .ifPresent(user -> {
                     user.setActive(false);

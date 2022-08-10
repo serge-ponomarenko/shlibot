@@ -19,3 +19,8 @@
 * added rest of entities
 * realized basic functionality (added products to list)
 * users are saving to database
+
+## 0.5.0-SNAPSHOT
+
+* realise base logic
+* added commands Cancel adding, Move to another list

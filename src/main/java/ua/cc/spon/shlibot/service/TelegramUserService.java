@@ -13,7 +13,7 @@ public interface TelegramUserService {
     /**
      * Save provided {@link TelegramUser} entity.
      *
-     * @param  telegramUser provided telegram user.
+     * @param telegramUser provided telegram user.
      */
     void save(TelegramUser telegramUser);
 
@@ -31,6 +31,7 @@ public interface TelegramUserService {
      * @return {@link TelegramUser} with provided chat ID or null otherwise.
      */
     Optional<TelegramUser> findByChatId(String chatId);
+
     Optional<TelegramUser> findByChatIdAndActiveIsTrue(String chatId);
 
 }
