@@ -1,10 +1,7 @@
 package ua.cc.spon.shlibot.command;
 
 import com.google.common.collect.ImmutableMap;
-import ua.cc.spon.shlibot.service.ProductService;
-import ua.cc.spon.shlibot.service.SendBotMessageService;
-import ua.cc.spon.shlibot.service.TelegramUserService;
-import ua.cc.spon.shlibot.service.UserListService;
+import ua.cc.spon.shlibot.service.*;
 
 import static ua.cc.spon.shlibot.command.CommandName.*;
 
@@ -14,25 +11,36 @@ import static ua.cc.spon.shlibot.command.CommandName.*;
 public class CommandContainer {
 
     private final ImmutableMap<String, Command> commandMap;
-    private final Command unknownCommand;
+    private final Command noCommand;
 
     public CommandContainer(SendBotMessageService sendBotMessageService,
                             TelegramUserService telegramUserService,
                             UserListService userListService,
-                            ProductService productService) {
+                            ProductService productService,
+                            MessageService messageService) {
         commandMap = ImmutableMap.<String, Command>builder()
-                .put(START.getCommandName(), new StartCommand(sendBotMessageService, telegramUserService, userListService))
-                .put(STOP.getCommandName(), new StopCommand(sendBotMessageService, telegramUserService))
+                .put(START.getCommandName(), new StartCommand(messageService, telegramUserService, userListService))
+                .put(STOP.getCommandName(), new StopCommand(messageService, telegramUserService))
                 .put(HELP.getCommandName(), new HelpCommand(sendBotMessageService))
-                .put(NO.getCommandName(), new NoCommand(sendBotMessageService, telegramUserService, userListService, productService))
                 .put(STAT.getCommandName(), new StatCommand(sendBotMessageService, telegramUserService))
+                .put(MY_LISTS.getCommandName(), new MyListsCommand(messageService, telegramUserService))
+                .put(SHOW_LIST.getCommandName(), new ShowListCommand(messageService, productService, userListService))
+                .put(CANCEL_ADD.getCommandName(), new CancelAddCommand(messageService, productService))
+                .put(MOVE_TO_ANOTHER_LIST_REQUEST.getCommandName(), new MoveToAnotherListRequestCommand(messageService, telegramUserService))
+                .put(MOVE_TO_LIST.getCommandName(), new MoveToListCommand(messageService, productService, userListService))
                 .build();
 
-        unknownCommand = new UnknownCommand(sendBotMessageService);
+        noCommand = new NoCommand(messageService, telegramUserService, productService);
     }
 
     public Command retrieveCommand(String commandIdentifier) {
-        return commandMap.getOrDefault(commandIdentifier, unknownCommand);
+
+        String command = commandMap.keySet().stream()
+                .filter(commandIdentifier::startsWith)
+                .findFirst()
+                .orElse(commandIdentifier);
+
+        return commandMap.getOrDefault(command, noCommand);
     }
 
 }

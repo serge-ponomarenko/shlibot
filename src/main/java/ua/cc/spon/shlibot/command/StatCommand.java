@@ -1,7 +1,6 @@
 package ua.cc.spon.shlibot.command;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.cc.spon.shlibot.repository.entity.TelegramUser;
 import ua.cc.spon.shlibot.service.SendBotMessageService;
 import ua.cc.spon.shlibot.service.TelegramUserService;
 

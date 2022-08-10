@@ -6,7 +6,7 @@ import ua.cc.spon.shlibot.repository.UserListRepository;
 import ua.cc.spon.shlibot.repository.entity.TelegramUser;
 import ua.cc.spon.shlibot.repository.entity.UserList;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -30,5 +30,10 @@ public class UserListServiceImpl implements UserListService {
     @Override
     public Set<UserList> findByOwner(TelegramUser telegramUser) {
         return userListRepository.findByOwner(telegramUser);
+    }
+
+    @Override
+    public Optional<UserList> findById(int id) {
+        return userListRepository.findById(id);
     }
 }
